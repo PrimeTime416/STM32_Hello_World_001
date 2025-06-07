@@ -1,0 +1,27 @@
+{
+  // Tell RA/Cargo to build your embedded target by default
+  "rust-analyzer.cargo.target": "thumbv7em-none-eabihf",
+
+  // When you save, run `cargo check --target thumbv7em-none-eabihf`
+  "rust-analyzer.checkOnSave.command": "check",
+  "rust-analyzer.checkOnSave.extraArgs": [
+    "--target",
+    "thumbv7em-none-eabihf"
+  ],
+
+  // (Optional) If you ever use `cargo clippy` on save:
+  "rust-analyzer.checkOnSave.enable": true,
+  // still point RA at your embedded target
+  "rust-analyzer.cargo.target": "thumbv7em-none-eabihf",
+
+  // override the onSave check so it ONLY builds your binary
+  "rust-analyzer.checkOnSave.overrideCommand": [
+    "cargo", "check",
+    "--message-format=json",
+    "--target", "thumbv7em-none-eabihf",
+    "--bin", "hello_world_001"
+  ]
+
+
+
+}
