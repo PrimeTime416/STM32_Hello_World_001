@@ -1,6 +1,4 @@
 {
-  // Tell RA/Cargo to build your embedded target by default
-  "rust-analyzer.cargo.target": "thumbv7em-none-eabihf",
 
   // When you save, run `cargo check --target thumbv7em-none-eabihf`
   "rust-analyzer.checkOnSave.command": "check",
@@ -19,7 +17,11 @@
     "cargo", "check",
     "--message-format=json",
     "--target", "thumbv7em-none-eabihf",
-    "--bin", "hello_world_001"
+    "--bin"
+  ],
+  "cSpell.words": [
+    "eabihf",
+    "thumbv"
   ]
 
 
