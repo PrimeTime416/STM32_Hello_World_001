@@ -23,8 +23,18 @@
     "BKPSRAM",
     "CCMRAM",
     "eabihf",
+    "ebkpsram",
+    "ebss",
+    "eccmram",
     "estack",
+    "ITCM",
+    "NOLOAD",
     "rodata",
+    "sbkpsram",
+    "sbss",
+    "sccmram",
+    "sdata",
+    "sidata",
     "thumbv"
   ]
 

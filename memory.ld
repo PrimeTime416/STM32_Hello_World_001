@@ -2,7 +2,64 @@
    Flash:   1 MB @ 0x08000000
    SRAM:    192 KB @ 0x20000000
    CCM RAM: 64 KB @ 0x10000000 (optional, not used here)
-   BKPSRAM:  4 KB @ 0x40024000 */
+   BKPSRAM:  4 KB @ 0x40024000 
+   
+   System Memory       | 0x1FFF\_0000     | 30 KB     | ST bootloader (read-only, user-inaccessible)      |### STM32F405RGT6 Memory Map Summary (from RM0090 Reference Manual)
+
+| Memory Region        | Start Address | Size     | Description                                        |
+| -------------------- | ------------- | -------- | -------------------------------------------------- |
+| System Memory        | 0x1FFF\_0000  | 30 KB    | ST bootloader and system ROM                       |
+| Flash                | 0x0800\_0000  | 1 MB     | User program code and read-only data               |
+| CCM SRAM             | 0x1000\_0000  | 64 KB    | Core Coupled SRAM (not DMA-accessible)             |
+| SRAM1 + SRAM2        | 0x2000\_0000  | 112 KB   | General-purpose RAM                                |
+| SRAM3 (if present)   | 0x2001\_C000  | 16 KB    | Optional additional RAM block (variant-specific)   |
+| Peripheral Region    | 0x4000\_0000  | Variable | Memory-mapped peripheral registers (AHB/APB)       |
+| Backup SRAM          | 0x4002\_4000  | 4 KB     | Retains data in standby mode (PWR\_CR.EN\_BKPSRAM) |
+| System Control Space | 0xE000\_E000  | Variable | NVIC, SCB, SysTick, Debug, ITM, FPU, etc.          |
+
+#### Notes:
+
+* **Flash Memory** is the main program storage, typically mapped to `0x0800_0000`.
+* **CCM SRAM** is high-speed SRAM tightly coupled to the CPU core—ideal for performance-critical data.
+* **BKPSRAM** must be enabled via the PWR peripheral; can retain contents during standby mode.
+* **System Memory** is where ST's internal bootloader resides; used for DFU/UART booting.
+
+This map supports development of accurate linker scripts (`memory.ld`) and peripheral memory access in low-level embedded firmware (Rust `no_std`, C, or Assembly).
+
+### 🧠 What is CCM SRAM good for?
+
+**CCM SRAM** (Core Coupled Memory) is a 64 KB region at `0x1000_0000` that:
+
+* **Is tightly coupled to the CPU core** (via the D-bus, not the system bus)
+* **Is faster** than main SRAM for CPU accesses (zero wait states)
+* **Is not accessible** by **DMA, peripherals, or the I-bus**
+* **Cannot be used** for:
+
+  * Interrupt vector tables
+  * DMA buffers
+  * ITCM-based code execution
+
+---
+
+### ✅ Use CCM SRAM for:
+
+* **High-speed working buffers** for signal processing, math, or real-time control:
+
+  * Audio buffers
+  * FIR/IIR filter state
+  * Temporary arrays in a control loop
+* **Fast stacks or context memory** for real-time tasks (in cooperative systems)
+* **Scratchpad** memory for calculations that are strictly CPU-only
+
+---
+
+### 🚫 Do not use CCM SRAM for:
+
+* Interrupt vector tables (use Flash or SRAM1)
+* DMA target or source buffers
+* Memory-mapped peripherals
+* Code execution via ITCM or via remapped Flash
+   */
 
 ENTRY(reset_handler)
 
