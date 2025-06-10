@@ -20,7 +20,11 @@
     "--bin"
   ],
   "cSpell.words": [
+    "BKPSRAM",
+    "CCMRAM",
     "eabihf",
+    "estack",
+    "rodata",
     "thumbv"
   ]
 
