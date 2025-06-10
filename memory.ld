@@ -4,7 +4,7 @@
    CCM RAM: 64 KB @ 0x10000000 (optional, not used here)
    BKPSRAM:  4 KB @ 0x40024000 */
 
-ENTRY(Reset_Handler)
+ENTRY(reset_handler)
 
 _Min_Heap_Size = 0x400;     /* 1KB */
 _Min_Stack_Size = 0x800;    /* 2KB */
