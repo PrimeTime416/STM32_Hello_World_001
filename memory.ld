@@ -36,7 +36,7 @@ SECTIONS {
     . = ALIGN(4);
   } > FLASH
 
-/* Initialized data will be in the FLASH and it will also be in the RAM during runtime */
+  /* Initialized data will be in the FLASH and it will also be in the RAM during runtime */
   .data : {
     _sidata = LOADADDR(.data); /*This returns the flash (LMA) address*/
     _sdata = . ; /* Start of data section in RAM (VMA)*/
@@ -51,6 +51,22 @@ SECTIONS {
     . = ALIGN(4);
     _ebss = . ;
   } > RAM
+
+  /* Uninitialized variables explicitly placed in CCMRAM */
+  .ccmram (NOLOAD) : {
+    _sccmram = .;
+    *(.ccmram*)
+    . = ALIGN(4);
+    _eccmram = .;
+  } > CCMRAM
+
+  /* Uninitialized variables that should persist in backup SRAM */
+  .bkpsram (NOLOAD) : {
+    _sbkpsram = .;
+    *(.bkpsram*)
+    . = ALIGN(4);
+    _ebkpsram = .;
+  } > BKPSRAM
 
   ._user_heap_stack : {
     . = ALIGN(4);
