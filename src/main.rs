@@ -10,6 +10,14 @@ static mut SCORES_GLOBAL: [i32; 5] = [1, 2, 3, 4, 5];
 const NUMBERS: [i32; 5] = [1, 2, 3, 4, 5];
 static mut BUFFER: [u8; 1024] = [0; 1024];
 
+// Placed into CCMRAM for fast access
+#[link_section = ".ccmram"]
+static mut CCM_BUFFER: [u8; 512] = [0; 512];
+
+// Stored in backup SRAM so it survives standby mode
+#[link_section = ".bkpsram"]
+static mut BKP_DATA: [u32; 8] = [0; 8];
+
 #[unsafe(export_name = "main")]
 pub extern "C" fn main() -> ! {
     let mut _total_score: i32 = 0;
@@ -17,7 +25,11 @@ pub extern "C" fn main() -> ! {
         _total_score += score;
     };
 
-    unsafe {BUFFER[0] = 100;}
+    unsafe {
+        BUFFER[0] = 100;
+        CCM_BUFFER[0] = 1;
+        BKP_DATA[0] = 42;
+    }
     loop {
         
     }
