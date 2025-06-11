@@ -27,6 +27,7 @@
     "ebss",
     "eccmram",
     "estack",
+    "hardfault",
     "ITCM",
     "NOLOAD",
     "rodata",
