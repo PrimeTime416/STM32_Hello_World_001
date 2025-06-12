@@ -12,6 +12,7 @@ extern "C" {
     fn MemManage_Handler();
     fn PendSV_Handler();
     fn SVCall_Handler();
+    fn Debug_Monitor();
     fn SysTick_Handler();
     fn UsageFault_Handler();
     fn ADC_Handler();
@@ -111,7 +112,7 @@ static VECTOR_TABLE: [Option<unsafe extern "C" fn()>; 97] = [
     None,
     None,
     Some(SVCall_Handler),
-    None,
+    Some(Debug Monitor),
     None,
     Some(PendSV_Handler),
     Some(SysTick_Handler),
@@ -119,7 +120,7 @@ static VECTOR_TABLE: [Option<unsafe extern "C" fn()>; 97] = [
     Some(PVD_Handler),
     Some(TAMP_STAMP_Handler),
     Some(RTC_WKUP_Handler),
-    None,
+    Some(FLASH),
     Some(RCC_Handler),
     Some(EXTI0_Handler),
     Some(EXTI1_Handler),

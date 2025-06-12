@@ -16,20 +16,20 @@ static VECTOR_TABLE: [Option< unsafe extern "C" fn()>; 97] = [
     Some(MemManage_Handler),
     Some(BusFault_Handler),
     Some(UsageFault_Handler),
-    None,
-    None,
-    None,
-    None,
+    Some(Reserved),
+    Some(Reserved),
+    Some(Reserved),
+    Some(Reserved),
     Some(SVCall_Handler),
-    None,
-    None,
+    Some(Debug_Monitor),
+    Some(Reserved),
     Some(PendSV_Handler),
     Some(SysTick_Handler),
     Some(WWDG_Handler),
     Some(PVD_Handler),
     Some(TAMP_STAMP_Handler),
     Some(RTC_WKUP_Handler),
-    None,
+    Some(FLASH),
     Some(RCC_Handler),
     Some(EXTI0_Handler),
     Some(EXTI1_Handler),
@@ -127,6 +127,14 @@ pub unsafe extern "C" fn NMI_Handler(){
 
 #[allow(non_snake_case)]
 #[unsafe(no_mangle)]
+pub extern "C" fn HardFault_Handler(){
+    loop {
+        
+    }
+}
+
+#[allow(non_snake_case)]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn Default_Handler(){
     loop {
         
@@ -135,12 +143,9 @@ pub unsafe extern "C" fn Default_Handler(){
 
 #[allow(non_snake_case)]
 #[unsafe(no_mangle)]
-pub extern "C" fn HardFault_Handler(){
-    loop {
-        
-    }
+pub unsafe extern "C" fn Reserved(){
+    unsafe {Default_Handler()};
 }
-
 
 macro_rules! stub_handlers {
     ($($name:ident),*) => {
@@ -157,13 +162,15 @@ stub_handlers!(
 BusFault_Handler, 
 MemManage_Handler, 
 UsageFault_Handler,
-SVCall_Handler, 
+SVCall_Handler,
+Debug_Monitor, 
 PendSV_Handler, 
 SysTick_Handler,
 WWDG_Handler, 
 PVD_Handler, 
 TAMP_STAMP_Handler, 
 RTC_WKUP_Handler,
+FLASH,
 RCC_Handler, 
 EXTI0_Handler, 
 EXTI1_Handler, 
