@@ -22,11 +22,15 @@
   "cSpell.words": [
     "BKPSRAM",
     "CCMRAM",
+    "CRYP",
+    "DCMI",
     "eabihf",
     "ebkpsram",
     "ebss",
     "eccmram",
     "estack",
+    "EXTI",
+    "FSMC",
     "hardfault",
     "ITCM",
     "NOLOAD",
@@ -35,8 +39,13 @@
     "sbss",
     "sccmram",
     "sdata",
+    "SDIO",
     "sidata",
-    "thumbv"
+    "thumbv",
+    "UART",
+    "USART",
+    "WKUP",
+    "WWDG"
   ]
 
 
