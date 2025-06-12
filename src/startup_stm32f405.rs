@@ -1,3 +1,9 @@
+/*
+When writing embedded Rust for ARM Cortex-M MCUs (e.g., STM32F405), 
+naming interrupt and exception handlers must conform to hardware expectations and C toolchain conventions, 
+not Rust's snake_case style. The suffix Handler is capitalized (PascalCase) by long-standing C/assembly convention.
+*/
+
 // 1. Define the vector table for the mcu
 static VECTOR_TABLE: [Option<unsafe fn()>; 95] = [
     Some(Reset_Handler()),
@@ -21,7 +27,7 @@ fn NMI_Handler(){
 }
 
 #[unsafe(no_mangle)]
-fn default_handler(){
+fn Default_Handler(){
     loop {
         
     }
