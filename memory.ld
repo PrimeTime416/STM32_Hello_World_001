@@ -61,7 +61,7 @@ This map supports development of accurate linker scripts (`memory.ld`) and perip
 * Code execution via ITCM or via remapped Flash
    */
 
-ENTRY(reset_handler)
+ENTRY(Reset_Handler)
 
 _Min_Heap_Size = 0x400;     /* 1KB */
 _Min_Stack_Size = 0x800;    /* 2KB */

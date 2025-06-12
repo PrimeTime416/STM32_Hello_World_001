@@ -1,20 +1,20 @@
 // 1. Define the vector table for the mcu
 static VECTOR_TABLE: [Option<unsafe fn()>; 95] = [
-    Some(reset_handler()),
-    Some(nmi_handler()),
-    Some(hardfault_handler()),
+    Some(Reset_Handler()),
+    Some(NMI_Handler()),
+    Some(HardFault_Handler()),
 
 
 ];
 // 2. Define the reset handler
 #[unsafe(no_mangle)]
-fn reset_handler(){
+fn Reset_Handler(){
     crate::main()
 }
 
 // 3. Define the exception handler 
 #[unsafe(no_mangle)]
-fn nmi_handler(){
+fn NMI_Handler(){
     loop {
         
     }
@@ -28,7 +28,7 @@ fn default_handler(){
 }
 
 #[unsafe(no_mangle)]
-fn hardfault_handler(){
+fn HardFault_Handler(){
     loop {
         
     }
