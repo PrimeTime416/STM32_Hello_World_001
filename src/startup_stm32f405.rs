@@ -4,6 +4,18 @@ naming interrupt and exception handlers must conform to hardware expectations an
 not Rust's snake_case style. The suffix Handler is capitalized (PascalCase) by long-standing C/assembly convention.
 */
 
+use core::ptr;
+
+unsafe extern "C" {
+    static _sidata: u32 ; /* Start of .data section in flash*/
+    static mut _sdata: u32 ; /* Start of . data section in RAM */
+    static mut _edata: u32 ; /* End of .data section in RAM */
+    static mut _sbss: u32 ; /*Start of .bss in RAM */
+    static mut _ebss: u32 ; /* End of .bss in RAM */
+}
+
+
+
 // 1. Define the vector table for the mcu
 #[used]
 #[allow(non_snake_case)]
@@ -16,20 +28,20 @@ static VECTOR_TABLE: [Option< unsafe extern "C" fn()>; 97] = [
     Some(MemManage_Handler),
     Some(BusFault_Handler),
     Some(UsageFault_Handler),
-    Some(Reserved),
-    Some(Reserved),
-    Some(Reserved),
-    Some(Reserved),
+    Some(Reserved_Handler),
+    Some(Reserved_Handler),
+    Some(Reserved_Handler),
+    Some(Reserved_Handler),
     Some(SVCall_Handler),
-    Some(Debug_Monitor),
-    Some(Reserved),
+    Some(Debug_Monitor_Handler),
+    Some(Reserved_Handler),
     Some(PendSV_Handler),
     Some(SysTick_Handler),
     Some(WWDG_Handler),
     Some(PVD_Handler),
     Some(TAMP_STAMP_Handler),
     Some(RTC_WKUP_Handler),
-    Some(FLASH),
+    Some(FLASH_Handler),
     Some(RCC_Handler),
     Some(EXTI0_Handler),
     Some(EXTI1_Handler),
@@ -113,6 +125,29 @@ static VECTOR_TABLE: [Option< unsafe extern "C" fn()>; 97] = [
 #[allow(non_snake_case)]
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn Reset_Handler(){
+    unsafe {
+        // 1. Copy the .data section from FLASH to RAM
+        // Reference of static variable to C like raw pointer
+        let mut src_is_flash = ptr::addr_of!(_sidata);
+        let mut dest_is_ram = ptr::addr_of_mut!(_sdata);
+        let data_end_in_ram = ptr::addr_of_mut!(_edata);
+
+        while dest_is_ram < data_end_in_ram {
+            *dest_is_ram = *src_is_flash;
+            dest_is_ram = dest_is_ram.add(1);
+            src_is_flash = src_is_flash.add(1);
+        }
+
+        // 2. Zero out the .bss section in the RAM
+        let mut bss = ptr::addr_of_mut!(_sbss);
+        let bss_end = ptr::addr_of_mut!(_ebss);
+
+        while bss < bss_end {
+            *bss = 0;
+            bss = bss.add(1);
+        }
+    }
+    // 3.  call main
     crate::main()
 }
 
@@ -141,12 +176,14 @@ pub unsafe extern "C" fn Default_Handler(){
     }
 }
 
+// 4. Reserved handler for vector table
 #[allow(non_snake_case)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn Reserved(){
+pub unsafe extern "C" fn Reserved_Handler(){
     unsafe {Default_Handler()};
 }
 
+// Default handler Macro
 macro_rules! stub_handlers {
     ($($name:ident),*) => {
         $(
@@ -163,14 +200,14 @@ BusFault_Handler,
 MemManage_Handler, 
 UsageFault_Handler,
 SVCall_Handler,
-Debug_Monitor, 
+Debug_Monitor_Handler, 
 PendSV_Handler, 
 SysTick_Handler,
 WWDG_Handler, 
 PVD_Handler, 
 TAMP_STAMP_Handler, 
 RTC_WKUP_Handler,
-FLASH,
+FLASH_Handler,
 RCC_Handler, 
 EXTI0_Handler, 
 EXTI1_Handler, 

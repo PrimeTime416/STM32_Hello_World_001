@@ -28,6 +28,7 @@
     "ebkpsram",
     "ebss",
     "eccmram",
+    "edata",
     "estack",
     "EXTI",
     "FSMC",
