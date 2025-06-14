@@ -64,8 +64,10 @@ This map supports development of accurate linker scripts (`memory.ld`) and perip
 ENTRY(Reset_Handler)
 
 MEMORY {
-  FLASH    (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K
-  RAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
+  /* FLASH    (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K */
+  FLASH    (rx)  : ORIGIN = 0x08000000, LENGTH = 64k
+  /* RAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 192K */
+  RAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 16K
   /* CCMRAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 64K  */
   /* BKPSRAM  (rwx) : ORIGIN = 0x40024000, LENGTH = 4K */
 }
