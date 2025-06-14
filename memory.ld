@@ -63,17 +63,17 @@ This map supports development of accurate linker scripts (`memory.ld`) and perip
 
 ENTRY(Reset_Handler)
 
-_Min_Heap_Size = 0x400;     /* 1KB */
-_Min_Stack_Size = 0x800;    /* 2KB */
-
 MEMORY {
   FLASH    (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K
   RAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 192K
-  CCMRAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 64K 
-  BKPSRAM  (rwx) : ORIGIN = 0x40024000, LENGTH = 4K
+  /* CCMRAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 64K  */
+  /* BKPSRAM  (rwx) : ORIGIN = 0x40024000, LENGTH = 4K */
 }
 
+/* Define the stack at the top of RAM */
 _estack = ORIGIN(RAM) + LENGTH(RAM);
+_Min_Heap_Size = 0x400;     /* 1KB */
+_Min_Stack_Size = 0x800;    /* 2KB */
 
 SECTIONS {
   .isr_vector : {
@@ -110,20 +110,20 @@ SECTIONS {
   } > RAM
 
   /* Uninitialized variables explicitly placed in CCMRAM */
-  .ccmram (NOLOAD) : {
+  /* .ccmram (NOLOAD) : {
     _sccmram = .;
     *(.ccmram*)
     . = ALIGN(4);
     _eccmram = .;
-  } > CCMRAM
+  } > CCMRAM */
 
   /* Uninitialized variables that should persist in backup SRAM */
-  .bkpsram (NOLOAD) : {
+  /* .bkpsram (NOLOAD) : {
     _sbkpsram = .;
     *(.bkpsram*)
     . = ALIGN(4);
     _ebkpsram = .;
-  } > BKPSRAM
+  } > BKPSRAM */
 
   ._user_heap_stack : {
     . = ALIGN(4);
