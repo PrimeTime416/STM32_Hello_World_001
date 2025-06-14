@@ -47,7 +47,8 @@
     "USART",
     "WKUP",
     "WWDG"
-  ]
+  ],
+  "cortex-debug.liveWatchRefreshRate": 250
 
 
 
