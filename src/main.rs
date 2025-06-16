@@ -13,14 +13,10 @@ mod startup_stm32f405;
 // #[unsafe(export_name = "main")]
 #[unsafe(no_mangle)]
 pub extern "C" fn main() -> ! {
-    loop {
-        
-    }
+    loop {}
 }
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    loop {
-        
-    }
+    loop {}
 }

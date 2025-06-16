@@ -7,7 +7,7 @@
         {
             "name": "Cortex Debug",
             "cwd": "${workspaceFolder}",
-            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/hello_world_001",
+            "executable": "${workspaceFolder}/target/thumbv7em-none-eabihf/debug/${workspaceFolderBasename}", //Reads from Cargo.toml package.name 
             "request": "launch",
             "type": "cortex-debug",
             "runToEntryPoint": "main",
