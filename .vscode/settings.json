@@ -51,7 +51,8 @@
     "WKUP",
     "WWDG"
   ],
-  "cortex-debug.liveWatchRefreshRate": 250
+  "cortex-debug.liveWatchRefreshRate": 250,
+  "cortex-debug.variableUseNaturalFormat": true
 
 
 

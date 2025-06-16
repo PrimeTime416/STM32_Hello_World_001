@@ -318,9 +318,9 @@ pub static VECTOR_TABLE: [VectorEntry; 98] = [
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn Reset_Handler() {
-    // Copy .data from flash to RAM
     let mut src = unsafe {&_sidata as *const u32};
     let mut dest = &raw mut _sdata as *mut u32;
+    // Copy .data from flash to RAM
 while dest <  &raw mut _edata as *mut u32{
         unsafe {
            *dest = *src;
@@ -329,17 +329,14 @@ while dest <  &raw mut _edata as *mut u32{
         }
     }
 
-    // Zero out .bss
     let mut bss = &raw mut _sbss as *mut u32;
     while bss < &raw mut _ebss as *mut u32 {
-        unsafe {
+        unsafe { //Zero's out .bss
             *bss = 0;
             bss = bss.add(1);
         }
     }
-
-    // Call main
-    crate::main();
+    crate::main(); //Calls application main
 }
 
 #[unsafe(no_mangle)]
