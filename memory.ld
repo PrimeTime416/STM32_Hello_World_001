@@ -1,6 +1,6 @@
 /* memory.ld — Linker script for STM32F405RGT6 (Cortex-M4)
    Flash:   1 MB @ 0x08000000
-   SRAM:    192 KB @ 0x20000000
+   SRAM:    128 KB @ 0x20000000
    CCM RAM: 64 KB @ 0x10000000 (optional, not used here)
    BKPSRAM:  4 KB @ 0x40024000 
    
@@ -11,7 +11,7 @@
 | System Memory        | 0x1FFF\_0000  | 30 KB    | ST bootloader and system ROM                       |
 | Flash                | 0x0800\_0000  | 1 MB     | User program code and read-only data               |
 | CCM SRAM             | 0x1000\_0000  | 64 KB    | Core Coupled SRAM (not DMA-accessible)             |
-| SRAM1 + SRAM2        | 0x2000\_0000  | 112 KB   | General-purpose RAM                                |
+| SRAM1 + SRAM2        | 0x2000\_0000  | 128 KB   | General-purpose RAM                                |
 | SRAM3 (if present)   | 0x2001\_C000  | 16 KB    | Optional additional RAM block (variant-specific)   |
 | Peripheral Region    | 0x4000\_0000  | Variable | Memory-mapped peripheral registers (AHB/APB)       |
 | Backup SRAM          | 0x4002\_4000  | 4 KB     | Retains data in standby mode (PWR\_CR.EN\_BKPSRAM) |
@@ -59,17 +59,27 @@ This map supports development of accurate linker scripts (`memory.ld`) and perip
 * DMA target or source buffers
 * Memory-mapped peripherals
 * Code execution via ITCM or via remapped Flash
+
+“The STM32F405xx and STM32F407xx family incorporates high-speed embedded memories (Flash memory up to 1 Mbyte, up to 192 Kbytes of SRAM)...” — This refers to SRAM1 (112 KB) + SRAM2 (16 KB) + CCM RAM (64 KB)en.DM00037051
+
+And from the reference manual:
+
+“SRAM3 (available on STM32F42xxx and STM32F43xxx) mapped at address 0x2002_0000...” — So SRAM3 is not available on the STM32F405 series
+
+Memory Region	Address Range	Size	Present on STM32F405RG?
+SRAM1	0x2000_0000–0x2001_BFFF	112 KB	✅ Yes
+SRAM2	0x2001_C000–0x2001_FFFF	16 KB	✅ Yes
+SRAM3	0x2002_0000–...	64 KB or 16 KB	❌ No
+CCM RAM	0x1000_0000–0x1000_FFFF	64 KB	✅ Yes
    */
 
 ENTRY(Reset_Handler)
 
 MEMORY {
-  /* FLASH    (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K */
-  FLASH    (rx)  : ORIGIN = 0x08000000, LENGTH = 64k
-  /* RAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 192K */
-  RAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 16K
-  /* CCMRAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 64K  */
-  /* BKPSRAM  (rwx) : ORIGIN = 0x40024000, LENGTH = 4K */
+  FLASH    (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K
+  RAM      (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
+  CCMRAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 64K 
+  BKPSRAM  (rwx) : ORIGIN = 0x40024000, LENGTH = 4K
 }
 
 /* Define the stack at the top of RAM */
@@ -112,20 +122,20 @@ SECTIONS {
   } > RAM
 
   /* Uninitialized variables explicitly placed in CCMRAM */
-  /* .ccmram (NOLOAD) : {
+  .ccmram (NOLOAD) : {
     _sccmram = .;
     *(.ccmram*)
     . = ALIGN(4);
     _eccmram = .;
-  } > CCMRAM */
+  } > CCMRAM
 
   /* Uninitialized variables that should persist in backup SRAM */
-  /* .bkpsram (NOLOAD) : {
+  .bkpsram (NOLOAD) : {
     _sbkpsram = .;
     *(.bkpsram*)
     . = ALIGN(4);
     _ebkpsram = .;
-  } > BKPSRAM */
+  } > BKPSRAM
 
   ._user_heap_stack : {
     . = ALIGN(4);
