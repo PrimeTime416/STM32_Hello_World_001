@@ -26,6 +26,19 @@ No HAL crates. No `cortex-m-rt`. Everything hand-written.
 
 ---
 
+## Known Gotchas
+
+**NRST on the ribbon cable holds the MCU in permanent reset.**  
+Pin 15 of the ST-Link 20-pin header is NRST. When the ST-Link USB is unplugged but the ribbon cable remains connected, the unpowered ST-Link circuitry pulls NRST low — holding the STM32 in reset indefinitely. The MCU cannot boot, and pressing the Reset button on the Feather makes no difference because NRST is immediately pulled low again by the cable. Fix: remove or leave Pin 15 (NRST) unconnected in the ribbon cable. NRST is not required for SWD flashing with probe-rs. Always physically disconnect the SWD ribbon cable when testing standalone (USB-C only) behaviour.
+
+**Pin 1 (VAPP) is a target voltage sense INPUT, not a power supply.**  
+The Feather's 3.3V feeds into the ST-Link via Pin 1 so the ST-Link can calibrate its level-shifters (confirmed in ST UM1075). The ST-Link does not power the target through this pin. When the ST-Link USB is unplugged, its unpowered internals can also load the 3.3V rail through this pin. Fix: leave Pin 1 unconnected — the ST-Link defaults to 3.3V and probe-rs works without it. Alternatively add a 10kΩ series resistor on the VAPP line to limit current when unpowered.
+
+**Orange charging LED flickers with no LiPo battery.**  
+The MCP73831 charger's status LED flickers when no battery is connected. This is normal — it does not indicate a fault.
+
+---
+
 ## Toolchain
 
 | Tool | Purpose |

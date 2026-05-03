@@ -6,7 +6,9 @@
       "PowerShell(probe-rs --version)",
       "PowerShell(rustc --version)",
       "PowerShell(cargo --version)",
-      "PowerShell(cargo install probe-rs-tools --locked 2>&1)"
+      "PowerShell(cargo install probe-rs-tools --locked 2>&1)",
+      "PowerShell(probe-rs info --chip STM32F405RG 2>&1)",
+      "PowerShell(probe-rs read --chip STM32F405RG b32 0x40023C14 1 2>&1)"
     ]
   }
 }
