@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(rustup show)",
+      "PowerShell(rustup target list --installed)",
+      "PowerShell(probe-rs --version)",
+      "PowerShell(rustc --version)",
+      "PowerShell(cargo --version)",
+      "PowerShell(cargo install probe-rs-tools --locked 2>&1)"
+    ]
+  }
+}

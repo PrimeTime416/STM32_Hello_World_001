@@ -9,6 +9,14 @@
 			],
 			"group": "build",
 			"label": "rust: cargo build[MCU]"
+		},
+		{
+			"label": "flash: STM32F405 (ST-Link)",
+			"type": "shell",
+			"command": "cargo flash --chip STM32F405RG",
+			"group": "build",
+			"problemMatcher": [],
+			"dependsOn": "rust: cargo build[MCU]"
 		}
 	]
 }

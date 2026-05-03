@@ -17,7 +17,7 @@
     "cargo", "check",
     "--message-format=json",
     "--target", "thumbv7em-none-eabihf",
-    "--bin"
+    "--bin", "hello_world_001"
   ],
   "cSpell.words": [
     "BKPSRAM",
