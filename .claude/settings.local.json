@@ -8,7 +8,13 @@
       "PowerShell(cargo --version)",
       "PowerShell(cargo install probe-rs-tools --locked 2>&1)",
       "PowerShell(probe-rs info --chip STM32F405RG 2>&1)",
-      "PowerShell(probe-rs read --chip STM32F405RG b32 0x40023C14 1 2>&1)"
+      "PowerShell(probe-rs read --chip STM32F405RG b32 0x40023C14 1 2>&1)",
+      "PowerShell(npm root -g)",
+      "PowerShell(claude mcp add notebooklm npx notebooklm-mcp@latest 2>&1)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "mcp__claude_ai_Google_Drive__search_files",
+      "Read(//c/Users/a2ker/.claude/**)"
     ]
   }
 }
