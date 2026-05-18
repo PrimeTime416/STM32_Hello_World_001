@@ -14,7 +14,13 @@
       "Skill(update-config)",
       "Skill(update-config:*)",
       "mcp__claude_ai_Google_Drive__search_files",
-      "Read(//c/Users/a2ker/.claude/**)"
+      "Read(//c/Users/a2ker/.claude/**)",
+      "mcp__notebooklm-mcp__list_notebooks",
+      "mcp__notebooklm-mcp__get_health",
+      "mcp__notebooklm-mcp__setup_auth",
+      "Bash(claude mcp *)",
+      "Bash(cmd.exe /c \"where node\")",
+      "Bash(cmd.exe /c 'node D:\\\\Dev\\\\Tools\\\\npm-global\\\\node_modules\\\\notebooklm-mcp\\\\dist\\\\index.js')"
     ]
   }
 }
