@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "notebooklm-mcp": {
+      "command": "C:\\Users\\a2ker\\AppData\\Roaming\\uv\\tools\\notebooklm-mcp-cli\\Scripts\\notebooklm-mcp.exe",
+      "args": []
+    }
+  }
+}
