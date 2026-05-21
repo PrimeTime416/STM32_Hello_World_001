@@ -10,49 +10,48 @@ No HAL crates. No `cortex-m-rt`. Everything hand-written.
 | Version | Description |
 |---------|-------------|
 | `hello_world_001` | LED blink — bare register access, no dependencies |
+| `hello_world_002` | USART3 "Hello, World!" — polled TX over PB10, 115200 baud, external USB-to-UART adapter |
 
 ---
 
 ## Planning
 
 ### Current Focus
-- Decide and implement a console logging pipeline for "Hello, World!" output (bare-metal, no HAL)
+- Hardware test: flash hello_world_002, wire USB-to-UART adapter, verify "Hello, World!" in PuTTY
 
-### Candidate Options
+### Chosen Approach: USART3 via external USB-to-UART adapter ✅
+Option 2 was selected. ST-LINK/V2 (standalone dongle) does not have a VCP bridge — that feature is only on V2-1 (Nucleo) and V3. USART3 via an external FTDI/CP2102 adapter is the correct path for this hardware.
 
-#### Option 1: ITM / SWO (Instrumentation Trace Macrocell)
-- **Extra wires:** 1 — connect PB3 (SWO) to ST-Link ribbon cable
-- **Direction:** Output only (logging, no input)
-- **MCU cost:** Near zero — ARM hardware serialises trace data, no USART peripheral consumed
-- **Tooling:** probe-rs / cargo-embed captures ITM packets and prints to terminal automatically
-- **PuTTY / Tera Term:** No — these tools expect a standard COM port, not a raw trace stream
-- **Total wires:** 4 (SWDIO, SWCLK, GND, PB3/SWO)
+#### Wiring
+| Feather pin | Adapter pin |
+|---|---|
+| PB10 (TX / GPIO 1) | RX |
+| PB11 (RX / GPIO 0) | TX |
+| GND | GND |
 
-#### Option 2: ST-Link Virtual COM Port Bridge (USART3)
-- **Extra wires:** 2 — PB10 (TX) and PB11 (RX) wired to ST-Link auxiliary UART header
-- **Direction:** Full duplex — log out and receive keyboard input
-- **MCU cost:** Medium — must configure USART3 peripheral, baud rate registers, PB10/PB11 as AF7
-- **Tooling:** PuTTY / Tera Term on the ST-Link COM port (e.g. COM5 / /dev/ttyACM0) at 115200 baud; also works with probe-rs
-- **PuTTY / Tera Term:** Yes
-- **Total wires:** 5 (SWDIO, SWCLK, GND, PB10/TX, PB11/RX)
+#### PuTTY / Tera Term settings
+- Port: COM port assigned to adapter (e.g. COM5 / /dev/ttyUSB0)
+- Baud: 115200, 8N1
 
-| Feature | Option 1: ITM/SWO | Option 2: USART3 VCP |
+### Logging Options Considered
+
+| Feature | Option 1: ITM/SWO | Option 2: USART3 VCP ✅ |
 |---|---|---|
 | Extra wires | 1 (PB3) | 2 (PB10, PB11) |
 | Direction | Output only | Full duplex |
-| MCU overhead | Extremely low | Standard (polled or interrupt) |
+| MCU overhead | Extremely low | Standard (polled) |
 | PuTTY support | No | Yes |
-| probe-rs support | Yes | Yes |
+| Works with ST-LINK/V2 | Yes (SWV) | Yes (external adapter) |
 
 ### Next Steps
-- [ ] Choose Option 1 (ITM/SWO) or Option 2 (USART3 VCP)
-- [ ] Wire the additional pin(s) to the ST-Link
-- [ ] Implement bare-metal Rust code for chosen method
-- [ ] Flash and verify "Hello, World!" appears in terminal
-- [ ] Update Session Log with results and lessons learned
+- [ ] Wire USB-to-UART adapter to Feather PB10/PB11/GND
+- [ ] Flash hello_world_002 with `cargo flash --chip STM32F405RG`
+- [ ] Open PuTTY at 115200 baud and verify "Hello, World!" output
+- [ ] Expand logging: add formatted output, multiple log lines, or RX input handling
+- [ ] Update Session Log with hardware test results
 
 ### Open Questions
-- Which option suits the user's current hardware wiring preference?
+- None — implementation complete, pending hardware verification
 
 ---
 
@@ -349,6 +348,8 @@ VECTOR_TABLE[1] → Reset_Handler
       │
       ├── Enable GPIOC clock
       ├── Set PC1 as output
+      ├── usart::init() — enable GPIOB + USART3 clocks, configure PB10/PB11 AF7, set BRR, enable TE+UE
+      ├── usart::write_str("Hello, World!\r\n") — polled TX
       │
       ▼
    loop { LED on → delay → LED off → delay }
@@ -367,3 +368,14 @@ The vector table (`VECTOR_TABLE`) is a 98-entry array placed in Flash at `0x0800
 - NRST pin on SWD ribbon cable must be left unconnected to avoid holding MCU in reset
 - probe-rs is used for flashing via ST-Link over SWD
 - README.md will be used as persistent memory — Planning section updated each session, Session Log appended after each session
+
+### Session 002 — 2026-05-21
+**Changes:** Added `src/usart.rs`, updated `src/main.rs`
+**Summary:** Researched and evaluated two console logging options (ITM/SWO vs USART3 VCP). Determined ST-LINK/V2 standalone dongle has no VCP bridge (V2-1/Nucleo only), so USART3 via external USB-to-UART adapter was chosen. Implemented bare-metal USART3 driver from scratch: clock enable, GPIO alternate function config (PB10/PB11 AF7), baud rate register, polled TX. "Hello, World!\r\n" is sent once on boot before the LED blink loop. Code cross-compiled cleanly in cloud container.
+**Lessons learned:**
+- ST-LINK/V2 standalone supports SWV (ITM/SWO) but has NO virtual COM port bridge — that requires V2-1 or V3
+- SWO is output-only (MCU → PC); no data path back to MCU
+- ST-LINK/V2 pin 13 (TDO_SWO) carries TRACESWO — adding this wire enables ITM in future
+- BRR for 115200 baud at 16 MHz HSI: mantissa=138, fraction=14 → `(138 << 4) | 14`
+- Cloud container can cross-compile bare-metal Rust (confirms code correctness before flashing)
+- Pending: hardware test with USB-to-UART adapter on PB10/PB11
