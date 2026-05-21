@@ -13,6 +13,21 @@ No HAL crates. No `cortex-m-rt`. Everything hand-written.
 
 ---
 
+## Planning
+
+### Current Focus
+- Add UART "Hello, World!" output (bare-metal, no HAL)
+
+### Next Steps
+- [ ] Decide output method: semihosting vs USART
+- [ ] Implement chosen output method
+- [ ] Update README with results and lessons learned
+
+### Open Questions
+- Which output method suits the user's hardware setup?
+
+---
+
 ## Hardware
 
 | Item | Detail |
@@ -312,3 +327,15 @@ VECTOR_TABLE[1] → Reset_Handler
 ```
 
 The vector table (`VECTOR_TABLE`) is a 98-entry array placed in Flash at `0x08000000`. Entry 0 is the initial stack pointer (`_estack`), entry 1 is `Reset_Handler`. All unused interrupt slots default to `Default_Handler` (infinite loop).
+
+---
+
+## Session Log
+
+### Session 001 — 2026-05-21
+**Changes:** None (exploration session)
+**Summary:** Explored project structure. Confirmed target board is Adafruit Feather STM32F405 Express. Identified PC1 as onboard red LED. Discussed adding UART Hello World as next feature. Established README.md as persistent session memory.
+**Lessons learned:**
+- NRST pin on SWD ribbon cable must be left unconnected to avoid holding MCU in reset
+- probe-rs is used for flashing via ST-Link over SWD
+- README.md will be used as persistent memory — Planning section updated each session, Session Log appended after each session
