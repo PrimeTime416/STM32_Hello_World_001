@@ -16,15 +16,43 @@ No HAL crates. No `cortex-m-rt`. Everything hand-written.
 ## Planning
 
 ### Current Focus
-- Add UART "Hello, World!" output (bare-metal, no HAL)
+- Decide and implement a console logging pipeline for "Hello, World!" output (bare-metal, no HAL)
+
+### Candidate Options
+
+#### Option 1: ITM / SWO (Instrumentation Trace Macrocell)
+- **Extra wires:** 1 — connect PB3 (SWO) to ST-Link ribbon cable
+- **Direction:** Output only (logging, no input)
+- **MCU cost:** Near zero — ARM hardware serialises trace data, no USART peripheral consumed
+- **Tooling:** probe-rs / cargo-embed captures ITM packets and prints to terminal automatically
+- **PuTTY / Tera Term:** No — these tools expect a standard COM port, not a raw trace stream
+- **Total wires:** 4 (SWDIO, SWCLK, GND, PB3/SWO)
+
+#### Option 2: ST-Link Virtual COM Port Bridge (USART3)
+- **Extra wires:** 2 — PB10 (TX) and PB11 (RX) wired to ST-Link auxiliary UART header
+- **Direction:** Full duplex — log out and receive keyboard input
+- **MCU cost:** Medium — must configure USART3 peripheral, baud rate registers, PB10/PB11 as AF7
+- **Tooling:** PuTTY / Tera Term on the ST-Link COM port (e.g. COM5 / /dev/ttyACM0) at 115200 baud; also works with probe-rs
+- **PuTTY / Tera Term:** Yes
+- **Total wires:** 5 (SWDIO, SWCLK, GND, PB10/TX, PB11/RX)
+
+| Feature | Option 1: ITM/SWO | Option 2: USART3 VCP |
+|---|---|---|
+| Extra wires | 1 (PB3) | 2 (PB10, PB11) |
+| Direction | Output only | Full duplex |
+| MCU overhead | Extremely low | Standard (polled or interrupt) |
+| PuTTY support | No | Yes |
+| probe-rs support | Yes | Yes |
 
 ### Next Steps
-- [ ] Decide output method: semihosting vs USART
-- [ ] Implement chosen output method
-- [ ] Update README with results and lessons learned
+- [ ] Choose Option 1 (ITM/SWO) or Option 2 (USART3 VCP)
+- [ ] Wire the additional pin(s) to the ST-Link
+- [ ] Implement bare-metal Rust code for chosen method
+- [ ] Flash and verify "Hello, World!" appears in terminal
+- [ ] Update Session Log with results and lessons learned
 
 ### Open Questions
-- Which output method suits the user's hardware setup?
+- Which option suits the user's current hardware wiring preference?
 
 ---
 
