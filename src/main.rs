@@ -21,10 +21,10 @@ pub extern "C" fn main() -> ! {
     }
 
     usart::init();
-    usart::write_str("Hello, World!\r\n");
 
     loop {
         unsafe { GPIOC_ODR.write_volatile(GPIOC_ODR.read_volatile() | (1 << 1)); }
+        usart::write_str("Hello, World!\r\n");
         delay(100_000);
         unsafe { GPIOC_ODR.write_volatile(GPIOC_ODR.read_volatile() & !(1 << 1)); }
         delay(100_000);

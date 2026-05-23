@@ -17,26 +17,32 @@ No HAL crates. No `cortex-m-rt`. Everything hand-written.
 ## Planning
 
 ### Current Focus
-- Hardware test: flash hello_world_002, wire USB-to-UART adapter, verify "Hello, World!" in PuTTY
 
-### Chosen Approach: USART3 via external USB-to-UART adapter ✅
+- Expand USART3 logging: formatted output, multiple log lines, or RX input handling
+
+### Chosen Approach: USART3 via external USB-to-UART adapter ✅ — Hardware Verified
+
 Option 2 was selected. ST-LINK/V2 (standalone dongle) does not have a VCP bridge — that feature is only on V2-1 (Nucleo) and V3. USART3 via an external FTDI/CP2102 adapter is the correct path for this hardware.
 
+Hardware test complete (2026-05-23): `Hello, World!` confirmed printing once per LED blink cycle over COM4 at 115200 baud in VS Code Serial Monitor.
+
 #### Wiring
+
 | Feather pin | Adapter pin |
-|---|---|
+| --- | --- |
 | PB10 (TX / GPIO 1) | RX |
 | PB11 (RX / GPIO 0) | TX |
 | GND | GND |
 
-#### PuTTY / Tera Term settings
-- Port: COM port assigned to adapter (e.g. COM5 / /dev/ttyUSB0)
+#### Serial monitor settings (VS Code / PuTTY / serial terminal)
+
+- Port: COM4 (USB Serial Port — adapter)
 - Baud: 115200, 8N1
 
 ### Logging Options Considered
 
 | Feature | Option 1: ITM/SWO | Option 2: USART3 VCP ✅ |
-|---|---|---|
+| --- | --- | --- |
 | Extra wires | 1 (PB3) | 2 (PB10, PB11) |
 | Direction | Output only | Full duplex |
 | MCU overhead | Extremely low | Standard (polled) |
@@ -44,14 +50,15 @@ Option 2 was selected. ST-LINK/V2 (standalone dongle) does not have a VCP bridge
 | Works with ST-LINK/V2 | Yes (SWV) | Yes (external adapter) |
 
 ### Next Steps
-- [ ] Wire USB-to-UART adapter to Feather PB10/PB11/GND
-- [ ] Flash hello_world_002 with `cargo flash --chip STM32F405RG`
-- [ ] Open PuTTY at 115200 baud and verify "Hello, World!" output
-- [ ] Expand logging: add formatted output, multiple log lines, or RX input handling
-- [ ] Update Session Log with hardware test results
+
+- [x] Wire USB-to-UART adapter to Feather PB10/PB11/GND
+- [x] Flash with `cargo flash --chip STM32F405RG`
+- [x] Verify "Hello, World!" output at 115200 baud
+- [ ] Expand logging: formatted output (e.g. blink counter), multiple log lines, or RX input handling
 
 ### Open Questions
-- None — implementation complete, pending hardware verification
+
+- None — hardware verified, USART3 TX fully working
 
 ---
 
@@ -368,6 +375,15 @@ The vector table (`VECTOR_TABLE`) is a 98-entry array placed in Flash at `0x0800
 - NRST pin on SWD ribbon cable must be left unconnected to avoid holding MCU in reset
 - probe-rs is used for flashing via ST-Link over SWD
 - README.md will be used as persistent memory — Planning section updated each session, Session Log appended after each session
+
+### Session 003 — 2026-05-23
+**Changes:** Fixed BRR calculation in `src/usart.rs`; moved `write_str` into blink loop in `src/main.rs`
+**Summary:** Hardware test confirmed garbled serial output — root cause was BRR missing the ÷16 oversampling factor. Code computed `16MHz / 115200 = 138.888` instead of `16MHz / (16 × 115200) = 8.680`. Fixed to mantissa=8, fraction=11. Also moved `write_str` inside the blink loop so "Hello, World!" prints once per LED cycle. Both changes verified on hardware — clean output confirmed in VS Code Serial Monitor.
+**Lessons learned:**
+
+- STM32 USART BRR formula: `USARTDIV = fCK / (16 × baud)` — the ÷16 for oversampling is easy to forget
+- Garbled serial output (wrong characters, not just noise) almost always means baud rate mismatch
+- `write_str` before the loop = prints once on boot; inside the loop = prints on every iteration
 
 ### Session 002 — 2026-05-21
 **Changes:** Added `src/usart.rs`, updated `src/main.rs`

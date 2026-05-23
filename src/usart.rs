@@ -34,9 +34,9 @@ pub fn init() {
             (afrh & !(0xF << 8) & !(0xF << 12)) | (7 << 8) | (7 << 12),
         );
 
-        // BRR: 16 MHz HSI / 115200 baud = USARTDIV 138.888...
-        // Mantissa = 138, Fraction = round(0.888 * 16) = 14
-        USART3_BRR.write_volatile((138 << 4) | 14);
+        // BRR: 16 MHz HSI / (16 * 115200) = USARTDIV 8.680
+        // Mantissa = 8, Fraction = round(0.680 * 16) = 11
+        USART3_BRR.write_volatile((8 << 4) | 11);
 
         // CR1: UE (bit 13) enable USART, TE (bit 3) enable transmitter
         USART3_CR1.write_volatile((1 << 13) | (1 << 3));
