@@ -20,7 +20,8 @@
       "mcp__notebooklm-mcp__setup_auth",
       "Bash(claude mcp *)",
       "Bash(cmd.exe /c \"where node\")",
-      "Bash(cmd.exe /c 'node D:\\\\Dev\\\\Tools\\\\npm-global\\\\node_modules\\\\notebooklm-mcp\\\\dist\\\\index.js')"
+      "Bash(cmd.exe /c 'node D:\\\\Dev\\\\Tools\\\\npm-global\\\\node_modules\\\\notebooklm-mcp\\\\dist\\\\index.js')",
+      "mcp__notebooklm-mcp__notebook_list"
     ]
   }
 }
