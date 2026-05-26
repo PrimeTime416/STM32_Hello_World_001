@@ -1,9 +1,45 @@
-[
+﻿[
+  {
+    "id": "8c06d046-70ff-4eca-95a3-8a37aa5b2438",
+    "title": "Electronics: USB-Serial",
+    "source_count": 2,
+    "updated_at": "2026-05-25T10:24:41Z"
+  },
+  {
+    "id": "000b1dcd-0fb5-4ca9-8820-ecb8acb95761",
+    "title": "STM32F405xx and STM32F407xx Microcontroller Datasheet",
+    "source_count": 16,
+    "updated_at": "2026-05-25T10:20:25Z"
+  },
+  {
+    "id": "bc6f5ca0-473f-492d-a8d8-37628c1d08a5",
+    "title": "AI: VS Code",
+    "source_count": 11,
+    "updated_at": "2026-05-23T22:28:14Z"
+  },
   {
     "id": "760e1cec-688e-4004-9ce1-b95186042870",
     "title": "AI: Local Models",
-    "source_count": 14,
-    "updated_at": "2026-05-18T18:29:23Z"
+    "source_count": 16,
+    "updated_at": "2026-05-23T18:11:17Z"
+  },
+  {
+    "id": "07b3da19-eed7-4f11-9a28-b819f93183b7",
+    "title": "GE Speedtronic Mark V Control Systems and Maintenance Architecture",
+    "source_count": 23,
+    "updated_at": "2026-05-20T13:18:56Z"
+  },
+  {
+    "id": "3dad32b3-9fd2-47da-afd1-606ad6efeb27",
+    "title": "Turbine Condition Monitoring Solutions and Predictive Maintenance Systems",
+    "source_count": 24,
+    "updated_at": "2026-05-20T13:18:37Z"
+  },
+  {
+    "id": "553d6726-5f2e-465c-a25c-c9535cc78cd8",
+    "title": "Electronics: Capacitors",
+    "source_count": 11,
+    "updated_at": "2026-05-18T22:59:37Z"
   },
   {
     "id": "fdab6399-6b95-49db-8eb1-b0c8b678a11f",
@@ -24,22 +60,10 @@
     "updated_at": "2026-05-03T15:56:30Z"
   },
   {
-    "id": "000b1dcd-0fb5-4ca9-8820-ecb8acb95761",
-    "title": "STM32F405xx and STM32F407xx Microcontroller Datasheet",
-    "source_count": 5,
-    "updated_at": "2026-05-03T03:41:44Z"
-  },
-  {
     "id": "bd169a50-611e-4aba-92fb-b600959bae00",
     "title": "Work: Safety: Electrical Safety",
     "source_count": 1,
     "updated_at": "2026-05-01T18:53:04Z"
-  },
-  {
-    "id": "3dad32b3-9fd2-47da-afd1-606ad6efeb27",
-    "title": "Turbine Condition Monitoring Solutions and Predictive Maintenance Systems",
-    "source_count": 24,
-    "updated_at": "2026-05-01T18:52:43Z"
   },
   {
     "id": "da389051-3144-4cdb-813b-aefc1880da99",
@@ -487,7 +511,7 @@
   },
   {
     "id": "2aa538d9-a1a0-4307-bc1b-73ade985efc7",
-    "title": "Brüel & Kjær Vibro Asset Condition Monitoring Solutions",
+    "title": "Br├╝el & Kj├ªr Vibro Asset Condition Monitoring Solutions",
     "source_count": 8,
     "updated_at": "2026-01-19T14:13:57Z"
   },
