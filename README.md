@@ -1,4 +1,4 @@
-# STM32F405 Feather — Bare-Metal Rust
+# {{project-name}}
 
 A from-scratch bare-metal Rust project for the **Adafruit Feather STM32F405 Express**.  
 No HAL crates. No `cortex-m-rt`. Everything hand-written.
